@@ -40,7 +40,10 @@ rule bwa_samse:
     log:
         o = "logs/bwa_samse/{sample}.stdout",
         e = "logs/bwa_samse/{sample}.stderr",
-    input: "output/bwa_aln/{sample}.sai"
+    input: 
+        fq = lambda wildcards: SAMPLE_DICT[wildcards.sample],
+        ref = config["inputs"]["reference"],
+	sai = "output/bwa_aln/{sample}.sai",
     output: "output/bwa_samse/{sample}.sam"
     threads: master_threads
     shell:
@@ -50,7 +53,9 @@ rule sam_to_bam:
     log:
         o = "logs/sam_to_bam/{sample}.stdout",
         e = "logs/sam_to_bam/{sample}.stderr",
-    input: "output/bwa_samse/{sample}.sam"
+    input: 
+        sam = "output/bwa_samse/{sample}.sam",
+        ref = config["inputs"]["reference"],
     output: "output/sam_to_bam/{sample}.bam"
     threads: master_threads
     shell:
