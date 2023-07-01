@@ -1,0 +1,3 @@
+inputs:
+    fastq_dir: /awesome/liam/reditools-for-comparison/fq-link
+    reference: /awesome/liam/reditools-for-comparison/genome/Mus_musculus.GRCm39.cdna.all.fa
