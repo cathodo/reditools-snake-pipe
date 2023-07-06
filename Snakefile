@@ -107,4 +107,4 @@ rule reditools:
         "'mkdir -p /output/redifolders/{wildcards.sample} && "
         "python /REDItools/main/REDItoolDenovo.py -i /{input.bam} -f "
         "/{input.ref} -o /{output} -t {threads}' "
-
+        "1> {logs.o} 2> {logs.e} "
