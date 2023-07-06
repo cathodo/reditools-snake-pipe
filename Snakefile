@@ -100,7 +100,7 @@ rule reditools:
     shell:
         "docker run -i --cpus {threads} --memory 120G "
         "-v $(pwd)/{input.bam}:/{input.bam} -v $(pwd)/{input.ref}:/{input.ref} "
-        "reditools -c "
+        "reditools "
         "'python /REDItools/main/REDItoolDenovo.py -i /{input.bam} -f "
         "/{input.ref} -o /{output} -t {threads}' "
         "1> {log.o} 2> {log.e}"
