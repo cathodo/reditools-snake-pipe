@@ -103,8 +103,8 @@ rule reditools:
         "--mount type=bind,source=$(pwd)/{input.bam},target=/{input.bam} "
         "--mount type=bind,source={GENFILEDIR},target={GENFILEDIR} "
         "--mount type=bind,source=$(pwd)/output,target=/output "
-        "reditools "
-        "mkdir -p /output/redifolders/{wildcards.sample} && "
+        "reditools sh -c "
+        "'mkdir -p /output/redifolders/{wildcards.sample} && "
         "python /REDItools/main/REDItoolDenovo.py -i /{input.bam} -f "
-        "/{input.ref} -o /{output} -t {threads} "
+        "/{input.ref} -o /{output} -t {threads}' "
 
