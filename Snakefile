@@ -11,6 +11,7 @@ from glob import glob
 
 configfile: "config.yaml"
 master_threads = 48
+GENFILEDIR=os.path.dirname(config["inputs"]["reference"])
 
 glob_list = glob(os.path.join(config["inputs"]["fastq_dir"], "*"+SIDE+"*.fastq*"))
 SAMPLE_DICT = dict()
@@ -99,9 +100,11 @@ rule reditools:
     threads: master_threads
     shell:
         "docker run -i --cpus {threads} --memory 120G "
-        "-v $(pwd)/{input.bam}:/{input.bam} -v $(pwd)/{input.ref}:/{input.ref} "
+        "--mount type=bind,source=$(pwd)/{input.bam},target=/{input.bam} "
+        "--mount type=bind,source={GENFILEDIR},target={GENFILEDIR} "
+        "--mount type=bind,source=$(pwd)/output,target=/output "
         "reditools "
-        "'python /REDItools/main/REDItoolDenovo.py -i /{input.bam} -f "
-        "/{input.ref} -o /{output} -t {threads}' "
-        "1> {log.o} 2> {log.e}"
+        "mkdir -p /output/redifolders/{wildcards.sample} && "
+        "python /REDItools/main/REDItoolDenovo.py -i /{input.bam} -f "
+        "/{input.ref} -o /{output} -t {threads} "
 
