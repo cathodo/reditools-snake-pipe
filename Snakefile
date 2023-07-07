@@ -23,6 +23,21 @@ rule all:
     input:
         expand("output/redifolders/{sample}", sample=SAMPLE_DICT.keys())
 
+rule bwa_mem:
+    log:
+        o = "logs/bwa_mem/{sample}.stderr1",
+        e = "logs/bwa_mem/{sample}.stderr2",
+    input:
+        fq = lambda wildcards: SAMPLE_DICT[wildcards.sample],
+        ref = config["inputs"]["reference"],
+    output:
+        sam = "output/bwa_mem/{sample}.sam",
+    threads: master_threads
+    shell:
+        "if [ ! -e {input.ref}.bwt ]; then bwa index {input.ref} 2> {log.o}; fi "
+        "&& bwa mem -t {threads} {input.ref} {input.fq} > {output.sam} 2> {log.e} "
+
+
 rule bwa_aln:
     log:
         o = "logs/bwa_aln/{sample}.stderr1",
@@ -35,7 +50,7 @@ rule bwa_aln:
     threads: master_threads
     shell:
         "if [ ! -e {input.ref}.bwt ]; then bwa index {input.ref} 2> {log.o}; fi "
-        "&& bwa aln -n 18 -t {threads} {input.ref} {input.fq} > {output.sai} 2> {log.e} "
+        "&& bwa aln -t {threads} {input.ref} {input.fq} > {output.sai} 2> {log.e} "
 
 rule bwa_samse:
     log:
@@ -56,7 +71,7 @@ rule samtools_view:
         o = "logs/samtools_view/{sample}.stdout",
         e = "logs/samtools_view/{sample}.stderr",
     input:
-        sam = "output/bwa_samse/{sample}.sam",
+        sam = "output/bwa_mem/{sample}.sam",
         ref = config["inputs"]["reference"],
     output:
         bam = "output/samtools_view/{sample}.bam",
