@@ -7,7 +7,7 @@
 SIDE = "R2"
 
 import os
-from glob import glob 
+from glob import glob
 
 configfile: "config.yaml"
 master_threads = 48
@@ -42,10 +42,10 @@ rule bwa_aln:
     log:
         o = "logs/bwa_aln/{sample}.stderr1",
         e = "logs/bwa_aln/{sample}.stderr2",
-    input: 
+    input:
         fq = lambda wildcards: SAMPLE_DICT[wildcards.sample],
         ref = config["inputs"]["reference"]
-    output: 
+    output:
         sai = "output/bwa_aln/{sample}.sai",
     threads: master_threads
     shell:
@@ -105,21 +105,19 @@ rule index_bam:
         "&& samtools index -@ {threads} {output} 1>> {log.o} 2>> {log.e}"
 
 rule reditools:
+    resources:
+        time = "48:00:00",
+        mem_gb = 32,
+    singularity: "singularity/reditools.sif"
     log:
         o = "logs/reditools/{sample}.stdout",
         e = "logs/reditools/{sample}.stderr",
-    input: 
+    input:
         bam = "output/index_bam/{sample}.sorted.bam",
         ref = config["inputs"]["reference"],
     output: "output/redifolders/{sample}"
     threads: master_threads
     shell:
-        "docker run -i --cpus {threads} --memory 120G "
-        "--mount type=bind,source=$(pwd)/{input.bam},target=/{input.bam} "
-        "--mount type=bind,source={GENFILEDIR},target={GENFILEDIR} "
-        "--mount type=bind,source=$(pwd)/output,target=/output "
-        "reditools sh -c "
-        "'mkdir -p /output/redifolders/{wildcards.sample} && "
-        "python /REDItools/main/REDItoolDenovo.py -i /{input.bam} -f "
-        "/{input.ref} -o /{output} -t {threads}' "
-        "1> {log.o} 2> {log.e} "
+        "'python REDItoolDenovo.py -i {input.bam} -f "
+        "{input.ref} -o {output} -t {threads} "
+        "1> {log.o} 2> {log.e}' "
