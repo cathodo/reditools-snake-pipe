@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --account=rrg-zovoilis
-#SBATCH --time=96:00:00
+#SBATCH --time=144:00:00
 #SBATCH --mem=1G
 #SBATCH --cpus-per-task=1
 
