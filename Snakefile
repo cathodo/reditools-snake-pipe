@@ -10,7 +10,7 @@ import os
 from glob import glob
 
 configfile: "config.yaml"
-master_threads = 48
+master_threads = 24
 GENFILEDIR=os.path.dirname(config["inputs"]["reference"])
 
 glob_path = os.path.join(config["inputs"]["fastq_dir"], "*"+SIDE+"*.fastq*")
@@ -30,6 +30,9 @@ rule all:
         expand("output/redifolders/{sample}", sample=SAMPLE_DICT.keys())
 
 rule bwa_mem:
+    resources:
+        time = "03:00:00",
+        mem_gb = 20,
     log:
         o = "logs/bwa_mem/{sample}.stderr1",
         e = "logs/bwa_mem/{sample}.stderr2",
@@ -45,6 +48,9 @@ rule bwa_mem:
 
 
 rule bwa_aln:
+    resources:
+        time = "03:00:00",
+        mem_gb = 20,
     log:
         o = "logs/bwa_aln/{sample}.stderr1",
         e = "logs/bwa_aln/{sample}.stderr2",
@@ -59,6 +65,9 @@ rule bwa_aln:
         "&& bwa aln -t {threads} {input.ref} {input.fq} > {output.sai} 2> {log.e} "
 
 rule bwa_samse:
+    resources:
+        time = "03:00:00",
+        mem_gb = 20,
     log:
         o = "logs/bwa_samse/{sample}.stdout",
         e = "logs/bwa_samse/{sample}.stderr",
