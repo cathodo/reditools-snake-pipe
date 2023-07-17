@@ -13,7 +13,13 @@ configfile: "config.yaml"
 master_threads = 48
 GENFILEDIR=os.path.dirname(config["inputs"]["reference"])
 
-glob_list = glob(os.path.join(config["inputs"]["fastq_dir"], "*"+SIDE+"*.fastq*"))
+glob_path = os.path.join(config["inputs"]["fastq_dir"], "*"+SIDE+"*.fastq*")
+glob_list = glob(glob_path)
+if len(glob_list) < 1:
+    print("ERROR: empty glob, maybe your path is wrong?")
+    print("glob path: " + glob_path)
+    exit()
+
 SAMPLE_DICT = dict()
 for s in glob_list:
     sample_name = os.path.basename(s).split(".")[0]
