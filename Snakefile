@@ -92,7 +92,7 @@ rule samtools_view:
         bam = "output/samtools_view/{sample}.bam",
     threads: master_threads
     shell:
-        "samtools view -@ {threads} -bS -T {input.ref} {input.sam} > {output.bam} 2>> {log.e}"
+        "samtools view -@ {threads} -bS -T {input.ref} {input.sam} > {output.bam} 2> {log.e}"
 
 rule separate_sense:
     log:
@@ -114,16 +114,15 @@ rule index_bam:
         e = "logs/index_bam/{sample}.stderr",
     input: "output/separate_sense/{sample}.plus.bam"
     output: "output/index_bam/{sample}.sorted.bam"
-    threads: master_threads
     shell:
-        "samtools sort -@ {threads} -o {output} {input} 1> {log.o} 2> {log.e} "
-        "&& samtools index -@ {threads} {output} 1>> {log.o} 2>> {log.e}"
+        "samtools sort -o {output} {input} 1> {log.o} 2> {log.e} "
+        "&& samtools index {output} 1>> {log.o} 2>> {log.e}"
 
 rule reditools:
     resources:
         time = "48:00:00",
         mem_gb = 32,
-    singularity: "singularity/reditools.sif"
+    container: "singularity/reditools.sif"
     log:
         o = "logs/reditools/{sample}.stdout",
         e = "logs/reditools/{sample}.stderr",
