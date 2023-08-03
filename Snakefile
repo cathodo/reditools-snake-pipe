@@ -132,6 +132,6 @@ rule reditools:
     output: "output/redifolders/{sample}"
     threads: master_threads
     shell:
-        "'python REDItoolDenovo.py -i {input.bam} -f "
+        "REDItoolDenovo.py -i {input.bam} -f "
         "{input.ref} -o {output} -t {threads} "
-        "1> {log.o} 2> {log.e}' "
+        "1> {log.o} 2> {log.e}"
