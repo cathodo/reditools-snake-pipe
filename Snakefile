@@ -128,7 +128,7 @@ rule reditools:
         e = "logs/reditools/{sample}.stderr",
     input:
         bam = "output/index_bam/{sample}.sorted.bam",
-        ref = config["inputs"]["reference"],
+        ref = f"genome/{os.path.basename(config['inputs']['reference'])}",
     output: "output/redifolders/{sample}"
     threads: master_threads
     shell:

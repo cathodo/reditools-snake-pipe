@@ -11,24 +11,19 @@ From: ubuntu:20.04
 %post
     ###### apt requisites
     apt update
-    apt -y install git wget
+    apt -y install git wget gcc libz-dev
     ###### building env
     # miniconda2: get miniconda2 latest vers
     wget https://repo.continuum.io/miniconda/Miniconda2-py27_4.8.3-Linux-x86_64.sh -O miniconda.sh
     # install conda
     bash miniconda.sh -b -p /opt/miniconda
     export PATH="/opt/miniconda/bin:$PATH"
-    # create env
+    # init bash and env
     mkdir -p /opt/etc
-    conda create --name reditools
-    echo -e "#! /bin/bash\n\n# script to activate the conda environment" > ~/.bashrc
-    # init env so we can activate it
     conda init bash
-    echo -e "\nconda activate reditools" >> ~/.bashrc
-    conda clean -ay
     cp ~/.bashrc /opt/etc/bashrc
+    # install reqs
+    conda install -c bioconda -c conda-forge python=2.7 "pysam<0.8"
     ###### reditools source and install
     git clone https://github.com/BioinfoUNIBA/REDItools.git
     cd REDItools && python setup.py install
-    # deps 
-    conda install -y -c bioconda -c conda-forge pysam

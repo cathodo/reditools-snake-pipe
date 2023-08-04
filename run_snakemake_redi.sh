@@ -16,7 +16,6 @@ conda activate mbdmbd
 # run
 snakemake --cores 48 --profile profiles/slurm/  \
  --use-singularity --singularity-args \
-"-B \
-/home/lmitch/projects/rrg-zovoilis/lmitch/reditools-snake-pipe/output/:/home/lmitch/projects/rrg-zovoilis/lmitch/reditools-snake-pipe/output/
-/home/lmitch/projects/rrg-zovoilis/lmitch/reditools-snake-pipe/genome/:/home/lmitch/projects/rrg-zovoilis/lmitch/reditools-snake-pipe/genome/
+"-B /home/lmitch/projects/rrg-zovoilis/lmitch/reditools-snake-pipe/output/:/home/lmitch/output/ \
+ -B /home/lmitch/projects/rrg-zovoilis/lmitch/reditools-snake-pipe/genome/:/home/lmitch/genome/ \
 "
